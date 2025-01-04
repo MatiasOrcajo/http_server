@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::utils::form_data::extract_form_data_from_http_message;
+use crate::utils::{extract_content_type_and_content_length::extract_content_type_and_content_length_from_http_request, form_data::extract_form_data_from_http_request};
 
 #[allow(dead_code)]
 #[derive(Debug)]
@@ -8,7 +8,10 @@ use crate::utils::form_data::extract_form_data_from_http_message;
 pub struct Request {
     pub method: Result<String, String>,
     pub request_target: Result<String, String>,
-    pub form_data: HashMap<String, String>
+    pub form_data: HashMap<String, String>,
+    pub http_user_agent: Result<String, String>,
+    pub content_type: String,
+    pub content_length: String
     
 }
 
@@ -45,11 +48,16 @@ impl Request {
         
         Request::extract_form_data(&content);
 
+        let (content_type, content_length) = extract_content_type_and_content_length_from_http_request(convert_tcp_to_vector(&content));
+
         Ok(
             Request {
                 method: Request::extract_method(&content),
                 request_target: Request::extract_request_target(&content),
-                form_data: HashMap::new()
+                form_data: Request::extract_form_data(&content),
+                http_user_agent: Request::extract_http_user_agent(&content),
+                content_type: content_type,
+                content_length: content_length
             }
         )
     }
@@ -67,12 +75,19 @@ impl Request {
     }
 
 
-    pub fn extract_form_data (content: &str) -> Result<String, String>{
+    pub fn extract_form_data (content: &str) -> HashMap<String, String>{
         
         let formatted_content = convert_tcp_to_vector(content);
-        extract_form_data_from_http_message(formatted_content);
-        Ok("".to_string())
+        
+        return extract_form_data_from_http_request(formatted_content);
 
     }
+
+
+    pub fn extract_http_user_agent (content: &str) -> Result<String, String> {
+
+        extract_from_vector(4, "HTTP user agent not found in content", content)
+    }
+
     
 }
