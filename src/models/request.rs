@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::utils::form_data::extract_form_data_from_http_message;
 
 #[allow(dead_code)]
@@ -6,6 +8,7 @@ use crate::utils::form_data::extract_form_data_from_http_message;
 pub struct Request {
     pub method: Result<String, String>,
     pub request_target: Result<String, String>,
+    pub form_data: HashMap<String, String>
     
 }
 
@@ -41,11 +44,12 @@ impl Request {
     pub fn new(content: String) -> Result<Request, String> {
         
         Request::extract_form_data(&content);
-        
+
         Ok(
             Request {
                 method: Request::extract_method(&content),
-                request_target: Request::extract_request_target(&content)
+                request_target: Request::extract_request_target(&content),
+                form_data: HashMap::new()
             }
         )
     }
