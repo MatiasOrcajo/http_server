@@ -1,0 +1,71 @@
+GET / HTTP/1.1
+User-Agent: PostmanRuntime/7.43.0
+Accept: */*
+Postman-Token: 638be5c7-99c9-463d-b258-d3cc23900b3a
+Host: 127.0.0.1:7878
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+[
+    "GET",
+    "/",
+    "HTTP/1.1",
+    "User-Agent:",
+    "PostmanRuntime/7.43.0",
+    "Accept:",
+    "*/*",
+    "Postman-Token:",
+    "c1b80966-15d0-4689-86b8-cbebf58f5eab",
+    "Host:",
+    "127.0.0.1:7878",
+    "Accept-Encoding:",
+    "gzip,",
+    "deflate,",
+    "br",
+    "Connection:",
+    "keep-alive",
+]
+
+POST FORM-DATA
+[
+    "POST",
+    "/",
+    "HTTP/1.1",
+    "User-Agent:",
+    "PostmanRuntime/7.43.0",
+    "Accept:",
+    "*/*",
+    "Postman-Token:",
+    "72d06176-7910-45af-91b3-8743c0d028a8",
+    "Host:",
+    "127.0.0.1:7878",
+    "Accept-Encoding:",
+    "gzip,",
+    "deflate,",
+    "br",
+    "Connection:",
+    "keep-alive",
+    "Content-Type:",
+    "multipart/form-data;",
+    "boundary=--------------------------547700248057366191042390",
+    "Content-Length:",
+    "382",
+    "----------------------------547700248057366191042390",
+    "Content-Disposition:",
+    "form-data;",
+    "name=\"name\"",
+    "matias",
+    "----------------------------547700248057366191042390",
+    "Content-Disposition:",
+    "form-data;",
+    "name=\"surname\"",
+    "orcajo",
+    "----------------------------547700248057366191042390",
+    "Content-Disposition:",
+    "form-data;",
+    "name=\"caca\"",
+    "si",
+    "----------------------------547700248057366191042390--",
+]
+
+
