@@ -1,17 +1,23 @@
+#[allow(dead_code)]
+
 use std::collections::HashMap;
 
-use crate::utils::{extract_content_type_and_content_length::extract_content_type_and_content_length_from_http_request, form_data::extract_form_data_from_http_request};
+use crate::utils::{
+    extract_content_type_and_content_length::extract_content_type_and_content_length_from_http_request, extract_remote_address_and_server_port::extract_remote_address_and_server_port, form_data::extract_form_data_from_http_request
+};
 
-#[allow(dead_code)]
 #[derive(Debug)]
-
 pub struct Request {
-    pub method: Result<String, String>,
-    pub request_target: Result<String, String>,
+    pub method: String,
+    pub request_target: String,
     pub form_data: HashMap<String, String>,
-    pub http_user_agent: Result<String, String>,
+    pub http_user_agent: String,
     pub content_type: String,
-    pub content_length: String
+    pub content_length: String,
+    pub server_protocol: String,
+    pub remote_address: String,
+    pub server_name: String,
+    pub server_port: String,
     
 }
 
@@ -46,18 +52,27 @@ impl Request {
     
     pub fn new(content: String) -> Result<Request, String> {
         
-        Request::extract_form_data(&content);
+        let tcp_in_vector = convert_tcp_to_vector(&content);
 
-        let (content_type, content_length) = extract_content_type_and_content_length_from_http_request(convert_tcp_to_vector(&content));
+        let (content_type, content_length) = extract_content_type_and_content_length_from_http_request(&tcp_in_vector);
+
+        let (remote_address, server_port) = extract_remote_address_and_server_port(&tcp_in_vector);
+
+        let server_name = remote_address.clone();
 
         Ok(
             Request {
-                method: Request::extract_method(&content),
-                request_target: Request::extract_request_target(&content),
+                method: Request::extract_method(&content).unwrap(),
+                request_target: Request::extract_request_target(&content).unwrap(),
                 form_data: Request::extract_form_data(&content),
-                http_user_agent: Request::extract_http_user_agent(&content),
+                http_user_agent: Request::extract_http_user_agent(&content).unwrap(),
                 content_type: content_type,
-                content_length: content_length
+                content_length: content_length,
+                server_protocol: Request::extract_server_protocol(&content).unwrap(),
+                remote_address: remote_address,
+                server_name: server_name,
+                server_port: server_port,
+
             }
         )
     }
@@ -74,6 +89,14 @@ impl Request {
         extract_from_vector(1, "Request target not found in content", content)
     }
 
+    pub fn extract_server_protocol (content: &str) -> Result<String, String> {
+        extract_from_vector(2, "HTTP user agent not found in content", content)
+    }
+
+    pub fn extract_http_user_agent (content: &str) -> Result<String, String> {
+
+        extract_from_vector(4, "HTTP user agent not found in content", content)
+    }
 
     pub fn extract_form_data (content: &str) -> HashMap<String, String>{
         
@@ -83,11 +106,7 @@ impl Request {
 
     }
 
-
-    pub fn extract_http_user_agent (content: &str) -> Result<String, String> {
-
-        extract_from_vector(4, "HTTP user agent not found in content", content)
-    }
+    
 
     
 }

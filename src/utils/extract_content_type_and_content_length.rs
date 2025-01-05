@@ -1,4 +1,4 @@
-pub fn extract_content_type_and_content_length_from_http_request (formatted_http_request: Vec<String>) -> (String, String) {
+pub fn extract_content_type_and_content_length_from_http_request (formatted_http_request: &Vec<String>) -> (String, String) {
 
     let mut content_type: String = String::new();
     let mut content_length: String = String::new(); 

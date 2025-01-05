@@ -16,15 +16,15 @@ pub fn handle_requests() {
                     
                 buffer.extend_from_slice(&temp_buffer[..bytes_read]);
 
-                let request = Request::new(String::from_utf8_lossy(&buffer).to_string());
+                let request = Request::new(String::from_utf8_lossy(&buffer).to_string()).unwrap();
 
                 let response = format!(
-                    "HTTP/1.1 200 OK\r\n\r\n {:?}", request.unwrap().method.unwrap());
+                    "HTTP/1.1 200 OK\r\n\r\n {:?}", request.method);
 
                 stream.write_all(response.as_bytes()).unwrap();
                 stream.flush().unwrap();
 
-                
+
 
             }
             Err(e) => {
