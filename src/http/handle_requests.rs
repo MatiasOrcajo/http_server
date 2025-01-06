@@ -2,6 +2,7 @@
 
 use std::{io::{Read, Write}, net::TcpListener};
 use crate::models::Request;
+use crate::utils::fastcgi::fastcgi;
 
 pub fn handle_requests() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -18,11 +19,13 @@ pub fn handle_requests() {
 
                 let request = Request::new(String::from_utf8_lossy(&buffer).to_string()).unwrap();
 
-                let response = format!(
-                    "HTTP/1.1 200 OK\r\n\r\n {:?}", request.method);
+                // fastcgi(request);
 
-                stream.write_all(response.as_bytes()).unwrap();
-                stream.flush().unwrap();
+                // let response = format!(
+                //     "HTTP/1.1 200 OK\r\n\r\n {:?}", request.method);
+
+                // stream.write_all(response.as_bytes()).unwrap();
+                // stream.flush().unwrap();
 
 
 
